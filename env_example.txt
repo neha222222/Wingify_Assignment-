@@ -1,0 +1,12 @@
+# OpenAI API Configuration
+OPENAI_API_KEY=your_openai_api_key_here
+
+# Celery Configuration
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/0
+
+# Database Configuration (SQLite by default)
+DATABASE_URL=sqlite:///./blood_analysis.db
+
+# Optional: Logging Level
+LOG_LEVEL=INFO 

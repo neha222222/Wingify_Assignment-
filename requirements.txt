@@ -44,3 +44,18 @@ pip==24.0
 protobuf==4.25.3
 pydantic==1.10.13
 pydantic_core==2.8.0
+
+# Queue Worker Dependencies
+celery==5.3.4
+redis==5.0.1
+flower==2.0.1
+
+# Database Dependencies
+sqlalchemy==2.0.23
+alembic==1.13.1
+python-multipart==0.0.6
+
+# Additional Utilities
+python-dotenv==1.0.0
+langchain-openai==0.0.5
+langchain==0.1.0
