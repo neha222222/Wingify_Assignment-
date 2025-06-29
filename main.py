@@ -1,5 +1,6 @@
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends
 from sqlalchemy.orm import Session
+from celery.result import AsyncResult
 import os
 import uuid
 import asyncio
@@ -9,7 +10,7 @@ from agents import doctor, nutritionist, exercise_specialist, verifier
 from task import help_patients, nutrition_analysis, exercise_planning, verification
 from tools import BloodTestReportTool
 from database import get_db, AnalysisResult, User
-from tasks import analyze_blood_report_task
+from tasks import analyze_blood_report_task, celery_app
 
 app = FastAPI(title="Blood Test Report Analyser - Enhanced Edition")
 
@@ -17,7 +18,6 @@ def run_crew(query: str, file_path: str = "data/sample.pdf", analysis_type: str 
     """To run the whole crew with the selected analysis type"""
     blood_tool = BloodTestReportTool()
     
-    # Map analysis type to task and agent
     task_map = {
         "summary": help_patients,
         "nutrition": nutrition_analysis,
@@ -26,12 +26,12 @@ def run_crew(query: str, file_path: str = "data/sample.pdf", analysis_type: str 
     }
     selected_task = task_map.get(analysis_type, help_patients)
     
-    # Patch the tool to use the correct file_path
+    
     def patched_tool():
         return blood_tool.read_data_tool(file_path)
     selected_task.tools = [patched_tool]
     
-    # Pick the right agent
+    
     agent_map = {
         "summary": doctor,
         "nutrition": nutritionist,
@@ -74,7 +74,7 @@ async def analyze_blood_report(
         if not query:
             query = "Summarise my Blood Test Report"
         
-        # Start background task
+        
         task = analyze_blood_report_task.delay(file_path, query.strip(), analysis_type, user_id)
         
         return {
@@ -112,7 +112,7 @@ async def analyze_blood_report_sync(
         
         response = run_crew(query=query.strip(), file_path=file_path, analysis_type=analysis_type)
         
-        # Store in database
+        
         analysis_result = AnalysisResult(
             user_id=user_id or str(uuid.uuid4()),
             file_name=file.filename,
@@ -145,9 +145,6 @@ async def analyze_blood_report_sync(
 @app.get("/status/{task_id}")
 async def get_task_status(task_id: str):
     """Get the status of a background task"""
-    from celery.result import AsyncResult
-    from tasks import celery_app
-    
     task_result = AsyncResult(task_id, app=celery_app)
     
     if task_result.state == 'PENDING':
@@ -203,7 +200,7 @@ async def get_analytics(db: Session = Depends(get_db)):
     completed_analyses = db.query(AnalysisResult).filter(AnalysisResult.status == "completed").count()
     failed_analyses = db.query(AnalysisResult).filter(AnalysisResult.status == "failed").count()
     
-    # Analysis type distribution
+        
     analysis_types = db.query(AnalysisResult.analysis_type).all()
     type_counts = {}
     for analysis_type in analysis_types:
