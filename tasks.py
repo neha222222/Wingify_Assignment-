@@ -6,7 +6,7 @@ import uuid
 
 @celery_app.task(bind=True)
 def analyze_blood_report_task(self, file_path: str, query: str, analysis_type: str, user_id: str = None):
-    """Background task for blood report analysis"""
+    
     start_time = time.time()
     
     try:
@@ -72,7 +72,7 @@ def analyze_blood_report_task(self, file_path: str, query: str, analysis_type: s
 
 @celery_app.task
 def cleanup_old_files():
-    """Cleanup task for old uploaded files"""
+   
     import os
     import glob
     from datetime import datetime, timedelta

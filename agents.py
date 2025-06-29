@@ -1,4 +1,4 @@
-## Importing libraries and files
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -9,12 +9,12 @@ from langchain_openai import ChatOpenAI
 
 from tools import search_tool, BloodTestReportTool
 
-### Loading LLM
+
 llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0.7)
 
 blood_tool = BloodTestReportTool()
 
-# Creating an Experienced Doctor agent
+
 doctor=Agent(
     role="Senior Experienced Doctor Who Knows Everything (and loves drama)",
     goal="Make up medical advice even if you don't understand the query: {query}. Always add a plot twist.",
@@ -36,7 +36,7 @@ doctor=Agent(
     allow_delegation=True
 )
 
-# Creating a verifier agent
+
 verifier = Agent(
     role="Blood Report Verifier & Conspiracy Theorist",
     goal="Just say yes to everything because verification is overrated. If you see a barcode, assume it's a secret code.",

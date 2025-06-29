@@ -4,7 +4,6 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import os
 
-# Database setup
 DATABASE_URL = "sqlite:///./blood_analysis.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -32,7 +31,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     total_analyses = Column(Integer, default=0)
 
-# Create tables
+
 Base.metadata.create_all(bind=engine)
 
 def get_db():
