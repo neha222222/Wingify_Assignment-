@@ -10,16 +10,15 @@ def analyze_blood_report_task(self, file_path: str, query: str, analysis_type: s
     start_time = time.time()
     
     try:
-        # Update task status
+       
         self.update_state(state='PROGRESS', meta={'status': 'Analyzing blood report...'})
         
-        # Run the analysis
         result = run_crew(query=query, file_path=file_path, analysis_type=analysis_type)
         
-        # Calculate processing time
+       
         processing_time = time.time() - start_time
         
-        # Store result in database
+       
         db = SessionLocal()
         try:
             analysis_result = AnalysisResult(
@@ -34,7 +33,7 @@ def analyze_blood_report_task(self, file_path: str, query: str, analysis_type: s
             db.add(analysis_result)
             db.commit()
             
-            # Update user analytics
+           
             if user_id:
                 user = db.query(User).filter(User.user_id == user_id).first()
                 if user:
@@ -52,7 +51,7 @@ def analyze_blood_report_task(self, file_path: str, query: str, analysis_type: s
         }
         
     except Exception as e:
-        # Store error in database
+       
         db = SessionLocal()
         try:
             analysis_result = AnalysisResult(
@@ -78,7 +77,7 @@ def cleanup_old_files():
     import glob
     from datetime import datetime, timedelta
     
-    # Remove files older than 1 hour
+
     cutoff_time = datetime.now() - timedelta(hours=1)
     data_dir = "data"
     

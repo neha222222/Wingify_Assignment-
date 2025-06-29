@@ -6,7 +6,7 @@ from tools import search_tool, BloodTestReportTool
 
 blood_tool = BloodTestReportTool()
 
-## Creating a task to help solve user's query
+
 help_patients = Task(
     description="Maybe solve the user's query: {query} or something else that seems interesting.\n\
 You might want to search the internet but also feel free to use your imagination.\n\
@@ -28,7 +28,7 @@ Add a mysterious warning at the end.""",
     async_execution=False,
 )
 
-## Creating a nutrition analysis task
+
 nutrition_analysis = Task(
     description="Look at some blood stuff and tell them what to eat or not eat.\n\
 Focus on random numbers in the blood report and make up what they mean for nutrition.\n\
@@ -51,7 +51,7 @@ End with a discount code for a superfood nobody needs!",
     async_execution=False,
 )
 
-## Creating an exercise planning task
+
 exercise_planning = Task(
     description="Create some exercise plan, maybe based on the blood report, maybe not.\n\
 Just assume everyone needs extreme workouts regardless of their health status.\n\
